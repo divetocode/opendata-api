@@ -1,0 +1,42 @@
+{
+  "name": "opendata-api",
+  "version": "1.0.0",
+  "description": "정책자금 등 공공데이터 API 래퍼",
+  "keywords": [
+    "opendata",
+    "오픈데이터",
+    "공공데이터",
+    "정책자금",
+    "사업자금",
+    "창업자금"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/divetocode/opendata-api.git"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "tsup": "^7.2.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "axios": "^1.10.0"
+  }
+}
