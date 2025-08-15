@@ -38,9 +38,14 @@ const budongsan_api = new OpenAPIClass('YOUR_SERVICE_KEY');
 
 async function main() {
   try {
-    const bizinfoList = await api.getSupportBizInfoList("행사ㆍ네트워크", "전국", "예비창업자");
-    console.log(' 비즈니스 정보:', bizinfoList);
+    const supportBizInfoList = await api.getSupportBizInfoList();
+    console.log('지원사업 공고 정보:', supportBizInfoList);
 
+    const integratedSupportInfoList = await api.getIntegratedSupportInfo();
+    console.log('통합공고 지원사업 정보:', integratedSupportInfoList);
+
+    const affordableLoanInfoList = await api.getAffordableLoanInfo();
+    console.log('서민 대출상품한눈에 정보:', affordableLoanInfoList);
   } catch (error) {
     console.error('API 호출 실패:', error.message);
   }
@@ -57,11 +62,19 @@ main();
 
 ### OpenAPIClass 클래스
 
-#### 📌 아파트 단지 정보
+#### 📌 지원 사업 정보
 
 | 메서드 | 설명 |
 |--------|------|
-| `getSupportBizInfoList(supt_biz_clsfc: string, supt_regin: string, biz_enyy: string)` | 지원사업 공고 정보 조회 |
+| `getSupportBizInfoList(supt_biz_clsfc?: string)` | 지원사업 공고 정보 조회 |
+| `getIntegratedSupportInfo()` | 통합공고 지원사업 정보 조회 |
+
+#### 📌 지원 사업 정보
+
+| 메서드 | 설명 |
+|--------|------|
+| `getAffordableLoanInfo()` | 서민 대출상품한눈에 정보 조회 |
+
 
 <br>
 

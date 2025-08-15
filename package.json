@@ -1,6 +1,6 @@
 {
   "name": "opendata-api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "정책자금 등 공공데이터 API 래퍼",
   "keywords": [
     "opendata",
@@ -37,6 +37,8 @@
     "typescript": "^5.3.0"
   },
   "dependencies": {
-    "axios": "^1.10.0"
+    "axios": "^1.10.0",
+    "fast-xml-parser": "^5.2.5",
+    "iconv-lite": "^0.6.3"
   }
 }
