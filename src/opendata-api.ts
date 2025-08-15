@@ -5,30 +5,12 @@ import util from 'util';
 
 import OpendataUtil from "./opendata-util";
 
-type Ret_IntegratedSupportProgramInfo = {
+type Ret_SupportProjectApi_SuccessResponseType = {
     currentCount: number,
-    data: Array<IntegratedSupportProgramInfo>
+    data: Array<SupportProjectApi_SuccessResponseType>
 }
 
-type IntegratedSupportProgramInfo = {
-  biz_category_cd: string; // 사업 카테고리 코드
-  biz_supt_bdgt_info: string; // 예산현황 및 지원규모
-  biz_supt_ctnt: string; // 지원 내용
-  biz_supt_trgt_info: string; // 지원 대상 정보
-  biz_yr: number; // 사업 연도
-  detl_pg_url: string; // 상세 페이지 URL
-  id: number; // 고유 ID
-  supt_biz_chrct: string; // 지원사업 특성
-  supt_biz_intrd_info: string; // 지원사업 소개
-  supt_biz_titl_nm: string; // 지원사업 제목
-};
-
-type Ret_SupportProjectAnnouncementInfo = {
-    currentCount: number,
-    data: Array<SupportProjectAnnouncementInfo>
-}
-
-type SupportProjectAnnouncementInfo = {
+type SupportProjectApi_SuccessResponseType = {
   aply_excl_trgt_ctnt: string | null; // 신청 제외 대상 내용
   aply_mthd_eml_rcpt_istc: string | null; // 이메일 접수 방식
   aply_mthd_etc_istc: string | null; // 기타 접수 방식
@@ -60,6 +42,25 @@ type SupportProjectAnnouncementInfo = {
   supt_biz_clsfc: string; // 지원사업 분류
   supt_regin: string; // 지원 지역
 };
+
+type Ret_IntegratedApi_SuccessResponseType = {
+    currentCount: number,
+    data: Array<IntegratedApi_SuccessResponseType>
+}
+
+type IntegratedApi_SuccessResponseType = {
+  biz_category_cd: string; // 사업 카테고리 코드
+  biz_supt_bdgt_info: string; // 예산현황 및 지원규모
+  biz_supt_ctnt: string; // 지원 내용
+  biz_supt_trgt_info: string; // 지원 대상 정보
+  biz_yr: number; // 사업 연도
+  detl_pg_url: string; // 상세 페이지 URL
+  id: number; // 고유 ID
+  supt_biz_chrct: string; // 지원사업 특성
+  supt_biz_intrd_info: string; // 지원사업 소개
+  supt_biz_titl_nm: string; // 지원사업 제목
+};
+
 
 type LoanAPI_SuccessResponseType  = {
   seq: number;
@@ -127,7 +128,7 @@ type LoanAPI_SuccessResponseType  = {
   kinfaprdetc: string; // 기간 무관 상세
 }; 
 
-type LoanAPI_ServiceErrorResponse = {
+type ServiceErrorResponse = {
   OpenAPI_ServiceResponse: {
     cmmMsgHeader: {
       errMsg: string; // 오류 메시지
@@ -137,9 +138,17 @@ type LoanAPI_ServiceErrorResponse = {
   };
 };
 
+type SupportProjectApiResponse =
+    | Ret_SupportProjectApi_SuccessResponseType  // 실제 성공 데이터 타입
+    | ServiceErrorResponse;  // 실페 오류 타입
+
+type IntegratedApiResponse =
+    | Ret_IntegratedApi_SuccessResponseType  // 실제 성공 데이터 타입
+    | ServiceErrorResponse;  // 실페 오류 타입
+
 type LoanApiResponse =
-  | LoanAPI_SuccessResponseType // 실제 성공 데이터 타입
-  | LoanAPI_ServiceErrorResponse; // 실페 오류 타입
+    | LoanAPI_SuccessResponseType // 실제 성공 데이터 타입
+    | ServiceErrorResponse; // 실페 오류 타입
 
 export class OpenAPIClass {
     private serviceKey: string;
@@ -155,9 +164,9 @@ export class OpenAPIClass {
     /**
      * 지원사업 공고 정보를 조회합니다.
      * @param {string>} supt_biz_clsfc 지원 분야(안 적어도 됨)
-     * @returns {Promise<Ret_SupportProjectAnnouncementInfo>} 지원사업 공고 정보
+     * @returns {Promise<SupportProjectApiResponse>} 지원사업 공고 정보
      */
-    async getSupportBizInfoList(supt_biz_clsfc: string = ""):Promise<Ret_SupportProjectAnnouncementInfo> {
+    async getSupportBizInfoList(supt_biz_clsfc: string = ""):Promise<SupportProjectApiResponse> {
         const { yyyymmdd } = OpendataUtil.getKoreanDateInfo();
         const url = `https://apis.data.go.kr/B552735/kisedKstartupService01/getAnnouncementInformation01?serviceKey=${this.serviceKey}&page=1&perPage=10000&cond[supt_regin::LIKE]=${supt_biz_clsfc}&cond[pbanc_rcpt_bgng_dt::GTE]=${yyyymmdd}&cond[rcrt_prgs_yn::EQ]=Y&returnType=json`;
         return this.fetchAndExtract(url);
@@ -165,10 +174,10 @@ export class OpenAPIClass {
 
     /**
      * 통합공고 지원사업 정보
-     * @returns {Promise<Ret_IntegratedSupportProgramInfo>} 통합공고 지원사업 정보
+     * @returns {Promise<IntegratedApiResponse>} 통합공고 지원사업 정보
      */
 
-    async getIntegratedSupportInfoList():Promise<Ret_IntegratedSupportProgramInfo> {
+    async getIntegratedSupportInfoList():Promise<IntegratedApiResponse> {
         const { year } = OpendataUtil.getKoreanDateInfo();
         const url = `https://apis.data.go.kr/B552735/kisedKstartupService01/getBusinessInformation01?serviceKey=${this.serviceKey}&page=1&perPage=10000&returnType=json&cond[biz_yr::EQ]=${year}`;
         return this.fetchAndExtract(url);
