@@ -34,17 +34,17 @@ import { OpenAPIClass, OpendataUtil } from 'opendata-api'; // ESM
 // or const { OpenAPIClass, OpendataUtil } = require('opendata-api'); // CommonJS
 
 // API 키는 공공데이터 포털에서 발급받은 서비스 키를 입력하세요.
-const budongsan_api = new OpenAPIClass('YOUR_SERVICE_KEY');
+const opendata_api = new OpenAPIClass('YOUR_SERVICE_KEY');
 
 async function main() {
   try {
-    const supportBizInfoList = await api.getSupportBizInfoList();
+    const supportBizInfoList = await opendata_api.getSupportBizInfoList();
     console.log('지원사업 공고 정보:', supportBizInfoList);
 
-    const integratedSupportInfoList = await api.getIntegratedSupportInfo();
+    const integratedSupportInfoList = await opendata_api.getIntegratedSupportInfo();
     console.log('통합공고 지원사업 정보:', integratedSupportInfoList);
 
-    const affordableLoanInfoList = await api.getAffordableLoanInfo();
+    const affordableLoanInfoList = await opendata_api.getAffordableLoanInfo();
     console.log('서민 대출상품한눈에 정보:', affordableLoanInfoList);
   } catch (error) {
     console.error('API 호출 실패:', error.message);

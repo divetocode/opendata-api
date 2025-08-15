@@ -1,6 +1,6 @@
 {
   "name": "opendata-api",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "정책자금 등 공공데이터 API 래퍼",
   "keywords": [
     "opendata",

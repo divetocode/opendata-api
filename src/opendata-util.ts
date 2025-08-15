@@ -1,3 +1,5 @@
+import util from 'util';
+
 class OpendataUtil {
 
     /**
@@ -19,6 +21,26 @@ class OpendataUtil {
             day,
             yyyymmdd: `${year}${month}${day}`
         };
+    }
+
+    static unwrapIfWrapped(payload: any) {
+        // 케이스 1: { data: ... }
+        if (payload && typeof payload === 'object' && 'data' in payload) {
+            return payload.data;
+        }
+        // 케이스 2: { response: { body: { items: { item: [...] }}}}
+        if (payload?.response?.body?.items?.item) {
+            return payload.response.body.items.item;
+        }
+        return payload;
+    }
+
+    static extractFromXml(xmlObj: any) {
+        // 보편적인 공공데이터 XML 구조
+        const items = xmlObj?.response?.body?.items?.item;
+        if (items) return items;
+    
+        throw new Error(util.inspect(xmlObj, { depth: null }));
     }
 }
 

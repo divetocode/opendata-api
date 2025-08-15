@@ -141,28 +141,6 @@ type LoanApiResponse =
   | LoanAPI_SuccessResponseType // 실제 성공 데이터 타입
   | LoanAPI_ServiceErrorResponse; // 실페 오류 타입
 
-/** 공공데이터 JSON 포맷의 흔한 래핑 해제 */
-function unwrapIfWrapped(payload: any) {
-    // 케이스 1: { data: ... }
-    if (payload && typeof payload === 'object' && 'data' in payload) {
-        return payload.data;
-    }
-    // 케이스 2: { response: { body: { items: { item: [...] }}}}
-    if (payload?.response?.body?.items?.item) {
-        return payload.response.body.items.item;
-    }
-    return payload;
-}
-
-/** XML 포맷에서 유효 데이터만 꺼내기 */
-function extractFromXml(xmlObj: any) {
-    // 보편적인 공공데이터 XML 구조
-    const items = xmlObj?.response?.body?.items?.item;
-    if (items) return items;
-
-    throw new Error(util.inspect(xmlObj, { depth: null }));
-}
-
 export class OpenAPIClass {
     private serviceKey: string;
 
@@ -215,7 +193,17 @@ export class OpenAPIClass {
     async fetchAndExtract(url: string) {
         try {
             const res = await axios.get(url);
-            return res?.data?.data;
+            if (res?.data?.data) {
+              return res.data.data;   
+            }
+
+            const parser = new XMLParser({
+                ignoreAttributes: false,
+                trimValues: true,
+            });
+
+            const xmlObj = parser.parse(res.data);
+            throw new Error(util.inspect(xmlObj, { depth: null }));
         } catch (error) {
             if (axios.isAxiosError(error)) {
                 throw new Error(`Network Error: ${error.message}`);
@@ -246,7 +234,7 @@ export class OpenAPIClass {
             let textUtf8 = null;
             try {
                 textUtf8 = buf.toString('utf-8');
-                return unwrapIfWrapped(JSON.parse(textUtf8));
+                return OpendataUtil.unwrapIfWrapped(JSON.parse(textUtf8));
             } catch (_) {
             // 실패 시 다음 단계로
             }
@@ -258,7 +246,7 @@ export class OpenAPIClass {
                     (contentType.match(/charset=([^;]+)/i)?.[1] || '').toLowerCase();
                 const guess = charset && charset !== 'utf-8' ? charset : 'euc-kr';
                 textKr = iconv.decode(buf, guess);
-                return unwrapIfWrapped(JSON.parse(textKr));
+                return OpendataUtil.unwrapIfWrapped(JSON.parse(textKr));
             } catch (_) {
             // 여전히 실패면 XML일 가능성
             }
@@ -272,11 +260,11 @@ export class OpenAPIClass {
             // 3-a) UTF-8로 XML 파싱
             try {
                 const xmlObj = parser.parse(textUtf8 ?? buf.toString('utf-8'));
-                return extractFromXml(xmlObj);
+                return OpendataUtil.extractFromXml(xmlObj);
             } catch (_) {
                 // 3-b) EUC-KR로 XML 파싱
                 const xmlObj = parser.parse(textKr ?? iconv.decode(buf, 'euc-kr'));
-                return extractFromXml(xmlObj);
+                return OpendataUtil.extractFromXml(xmlObj);
             }
         } catch (error) {
             if (axios.isAxiosError?.(error)) {
