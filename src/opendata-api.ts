@@ -176,7 +176,7 @@ export class OpenAPIClass {
 
     /**
      * 서민 대출상품한눈에 정보조회 서비스
-     * @returns {Promise<Ret_IntegratedSupportProgramInfo>} 서민 대출상품한눈에 정보조회 서비스
+     * @returns {Promise<LoanApiResponse>} 서민 대출상품한눈에 정보조회 서비스
      */
     async getAffordableLoanInfoList(): Promise<LoanApiResponse> {
         const url =
@@ -190,7 +190,7 @@ export class OpenAPIClass {
      * @param {string} url 요청 URL
      * @returns {Promise<any>} 응답 데이터
      */
-    async fetchAndExtract(url: string) {
+    private async fetchAndExtract(url: string) {
         try {
             const res = await axios.get(url);
             if (res?.data?.data) {
@@ -217,7 +217,7 @@ export class OpenAPIClass {
      * @param url 요청 URL
      * @returns 응답 데이터
      */
-    async _fetchAndExtract<T = any>(url: string): Promise<T> {
+    private async _fetchAndExtract<T = any>(url: string): Promise<T> {
         try {
             const res = await axios.get(url, {
                 responseType: 'arraybuffer', // 원본 바이트

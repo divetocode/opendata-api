@@ -1,14 +1,15 @@
 {
   "name": "opendata-api",
-  "version": "1.0.3",
-  "description": "정책자금 등 공공데이터 API 래퍼",
+  "version": "1.0.4",
+  "description": "정책자금, 서민대출 등 공공데이터 API 래퍼",
   "keywords": [
     "opendata",
     "오픈데이터",
     "공공데이터",
     "정책자금",
     "사업자금",
-    "창업자금"
+    "창업자금",
+    "서민대출"
   ],
   "license": "MIT",
   "repository": {
