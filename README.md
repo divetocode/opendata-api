@@ -41,10 +41,10 @@ async function main() {
     const supportBizInfoList = await opendata_api.getSupportBizInfoList();
     console.log('지원사업 공고 정보:', supportBizInfoList);
 
-    const integratedSupportInfoList = await opendata_api.getIntegratedSupportInfo();
+    const integratedSupportInfoList = await opendata_api.getIntegratedSupportInfoList();
     console.log('통합공고 지원사업 정보:', integratedSupportInfoList);
 
-    const affordableLoanInfoList = await opendata_api.getAffordableLoanInfo();
+    const affordableLoanInfoList = await opendata_api.getAffordableLoanInfoList();
     console.log('서민 대출상품한눈에 정보:', affordableLoanInfoList);
   } catch (error) {
     console.error('API 호출 실패:', error.message);
@@ -67,13 +67,13 @@ main();
 | 메서드 | 설명 |
 |--------|------|
 | `getSupportBizInfoList(supt_biz_clsfc?: string)` | 지원사업 공고 정보 조회 |
-| `getIntegratedSupportInfo()` | 통합공고 지원사업 정보 조회 |
+| `getIntegratedSupportInfoList()` | 통합공고 지원사업 정보 조회 |
 
 #### 📌 지원 사업 정보
 
 | 메서드 | 설명 |
 |--------|------|
-| `getAffordableLoanInfo()` | 서민 대출상품한눈에 정보 조회 |
+| `getAffordableLoanInfoList()` | 서민 대출상품한눈에 정보 조회 |
 
 
 <br>
